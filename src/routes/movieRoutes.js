@@ -1,9 +1,10 @@
 const express = require("express");
-const { rateMovie } = require("../controllers/movieController");
+const { getMovies, rateMovie, reviewMovie } = require("../controllers/movieController");
 
 const router = express.Router();
 
-// Route to rate a movie
+router.get("/", getMovies);
 router.post("/:movieId/rate", rateMovie);
+router.post("/:movieId/review", reviewMovie);
 
 module.exports = router;

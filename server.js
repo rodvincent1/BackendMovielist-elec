@@ -1,18 +1,20 @@
+require("dotenv").config();
 const express = require("express");
-const dotenv = require("dotenv");
-const cors = require("cors");
-const connectDB = require("./src/config/db");
-
-dotenv.config();
-connectDB();
+const mongoose = require("mongoose");
+const movieRoutes = require("./src/routes/movieRoutes");
 
 const app = express();
-app.use(express.json());
-app.use(cors());
+app.use(express.json()); // Middleware to parse JSON
 
-// Routes
-app.use("/api/movies", require("./src/routes/movieRoutes"));
-app.use("/api/users", require("./src/routes/userRoutes"));
+// Connect to MongoDB
+mongoose
+    .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log("MongoDB connected"))
+    .catch((err) => console.error("MongoDB connection error:", err));
 
+// API Routes
+app.use("/api/movies", movieRoutes);
+
+// Start Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
